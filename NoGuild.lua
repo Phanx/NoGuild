@@ -37,10 +37,10 @@ local L2 = {
 	"laid back", "looking",
 	"member",
 	"newly formed", "nice",
-	"progression", "pve", "pvp",
+	"pacific", "progression", "pve", "pvp",
 	"raid", "rbg", "repu?t?a?t?i?o?n?", "roster",
 	"server time", "skilled", "social",
-	"tabard",
+	"tabard", "times",
 	"unlock",
 	"ventr?i?l?o?",
 	"want", "we are", "we plan t?on?", "weekend", "weekly", "would you like",
@@ -59,51 +59,45 @@ local format, strfind, strjoin, strlower, strmatch, tinsert, tostring, tremove, 
 local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, GetAutoDeclineGuildInvites, IsInGuild, UnitInParty, UnitInRaid, UnitIsInMyGuild
     = BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, GetAutoDeclineGuildInvites, IsInGuild, UnitInParty, UnitInRaid, UnitIsInMyGuild
 
-local function debug(lvl, str, ...)
-	if str then
-		if (...) then
-			if type(str) == "string" and strmatch(str, "%%[dfqsx%d%.]") then
-				DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. format(str, ...))
-			else
-				DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. strjoin(" ", tostringall(str, ...)))
-			end
+local function debug(str, ...)
+	if (...) then
+		if type(str) == "string" and strmatch(str, "%%[dfqsx%d%.]") then
+			DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. format(str, ...))
 		else
-			DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. tostring(str))
+			DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. strjoin(" ", tostringall(str, ...)))
 		end
+	elseif str then
+		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. tostring(str))
 	end
 end
 
 ------------------------------------------------------------------------
 
-local last, result
+local seen, last, result = {}
 
-local function exspaminate(self, event, message, sender, _, _, _, flag, _, _, _, _, line, guid)
+local function exspaminate(self, event, message, sender, _, _, _, flag, _, channelID, _, _, line, guid)
 	if line == last then
 		return result
 	end
 	last, result = line, nil
 
-	if GetAutoDeclineGuildInvites() == 0 and not IsInGuild() then
-		return -- debug("ALLOWED [GetAutoDeclineGuildInvites]", tostring(GetAutoDeclineGuildInvites()), "[IsInGuild]", tostring(IsInGuild()))
-	end
-
 	-- debug("[flag]", tostring(flag), "[line]", tostring(line), "[CanComplainChat]", tostring(CanComplainChat(line)))
 
 	if flag == "GM" or flag == "DEV" then
-		return -- debug("ALLOWED [flag]", flag)
+		return --debug("ALLOWED [flag]", flag)
 	end
 
-	if event == "CHAT_MSG_CHANNEL" and (channelId == 0 or type(channelId) ~= "number") then
+	if event == "CHAT_MSG_CHANNEL" and (channelID == 0 or type(channelID) ~= "number") then
 		-- Ignore custom channels
-		return
+		return --debug("ALLOWED custom channel", channelID)
 	end
 
 	if not CanComplainChat(line) or UnitIsInMyGuild(sender) or UnitInRaid(sender) or UnitInParty(sender) then
 		return --[[ debug("ALLOWED",
-			"[CanComplainChat]", tostring(CanComplainChat(line)   or "nil"),
-			"[UnitIsInMyGuild]", tostring(UnitIsInMyGuild(sender) or "nil"),
-			"[UnitInRaid]",      tostring(UnitInRaid(sender)      or "nil"),
-			"[UnitInParty]",     tostring(UnitInParty(sender)     or "nil")) ]]
+			"[CanComplainChat]", CanComplainChat(line),
+			"[UnitIsInMyGuild]", UnitIsInMyGuild(sender),
+			"[UnitInRaid]",      UnitInRaid(sender),
+			"[UnitInParty]",     UnitInParty(sender)) ]]
 	end
 
 	if event == "CHAT_MSG_WHISPER" then
@@ -112,7 +106,7 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, _, _,
 			for j = 1, BNGetNumFriendToons(i) do
 				local _, name, game = BNGetFriendToonInfo(i, j)
 				if name == sender and game == "WoW" then
-					return -- debug("ALLOWED [BNGetFriendToonInfo]", i, j, name, game)
+					return --debug("ALLOWED [BNGetFriendToonInfo]", i, j, name, game)
 				end
 			end
 		end
@@ -137,34 +131,60 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, _, _,
 	end
 
 	if score > 3 then
-		-- debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
-		-- debug("   ", message)
-		tinsert(NoGuildMessages, 1, format("[%d] %s: %s", score, sender, message))
+		--debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
+		--debug("   ", message)
+		if not seen[message] then
+			tinsert(NoGuildMessages, 1, format("[%d] %s: %s", score, sender, message))
+		end
 		result = true
 		return true
 	end
 
+	--debug("Allowed message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
 	result = nil
 end
 
 ------------------------------------------------------------------------
 
+local enabled
+
 local addon = CreateFrame("Frame")
 addon:RegisterEvent("PLAYER_LOGIN")
-addon:SetScript("OnEvent", function()
-	-- Initialize log
-	NoGuildMessages = NoGuildMessages or {}
-	db = NoGuildMessages
+addon:SetScript("OnEvent", function(self, event)
+	if event == "PLAYER_LOGIN" then
+		-- Spammers love that "personal touch"
+		tinsert(L1, (UnitName("player")))
 
-	-- Truncate log
-	for i = 50, #db do
-		db[i] = nil
+		self:UnregisterEvent("PLAYER_LOGIN")
+		self:RegisterEvent("DISABLE_DECLINE_GUILD_INVITE")
+		self:RegisterEvent("ENABLE_DECLINE_GUILD_INVITE")
+		self:RegisterEvent("PLAYER_GUILD_UPDATE")
+		self:RegisterEvent("PLAYER_LOGOUT")
+
+	elseif event == "PLAYER_LOGOUT" then
+		-- Truncate log
+		while #NoGuildMessages > 100 do
+			tremove(NoGuildMessages, #NoGuildMessages)
+		end
+		-- End
+		return
 	end
 
-	-- Spammers love that "personal touch"
-	tinsert(L1, (UnitName("player")))
-
-	-- Los!
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
+	local toenable = IsInGuild() or GetAutoDeclineGuildInvites() == 1
+	if toenable == enabled then
+		return
+	end
+	if toenable then
+		-- Los!
+		print("Los!")
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
+		enabled = true
+	else
+		-- Halt!
+		print("Halt!")
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
+		enabled = false
+	end
 end)
