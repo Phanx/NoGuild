@@ -1,0 +1,11 @@
+## Interface: 50400
+
+## Title: NoGuild
+## Notes: Block guild solicitations in whispers and public chat channels.
+## Notes-deDE: Gildewerbungen in Flüstern und öffentlichen Channels blockieren.
+## Notes-esES: Bloquear los anuncios de hermandades en susurros y los canales públicos.
+## Notes-esMX: Bloquear los anuncios de hermandades en susurros y los canales públicos.
+
+## SavedVariables: NoGuildDB, NoGuildMessages
+
+NoGuild.lua
