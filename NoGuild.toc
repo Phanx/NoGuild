@@ -1,4 +1,5 @@
 ## Interface: 50400
+## Version: 5.4.1.wowi:revision
 
 ## Title: NoGuild
 ## Notes: Block guild solicitations in whispers and public chat channels.
@@ -6,6 +7,14 @@
 ## Notes-esES: Bloquear los anuncios de hermandades en susurros y los canales públicos.
 ## Notes-esMX: Bloquear los anuncios de hermandades en susurros y los canales públicos.
 
-## SavedVariables: NoGuildDB, NoGuildMessages
+## Author: Phanx
+## X-Email: addons@phanx.net
+## X-License: Public Domain
+## X-CompatibleLocales: deDE, enUS, esES, esMX, frFR, itIT, ptBR, koKR, ruRU, zhCN, zhTW
+## X-Website: http://www.wowinterface.com/downloads/info-NoGuild.html
+## X-Curse-Project-Name: noguild
+## X-WoWI-ID:
+
+## SavedVariables: NoGuildMessages
 
 NoGuild.lua
