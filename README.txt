@@ -2,7 +2,7 @@ NoGuild
 ============
 
 * Written by Phanx <addons@phanx.net>
-* http://www.wowinterface.com/downloads/info-NoGuild.html
+* http://www.wowinterface.com/downloads/info22644-NoGuild.html
 * http://www.curse.com/addons/wow/noguild
 
 
