@@ -51,6 +51,8 @@ local OK = { "tank", "heal", "dps", "lfm", "lfg", "scenario" }
 
 ------------------------------------------------------------------------
 
+NoGuildMessages = {}
+
 local format, strfind, strjoin, strlower, strmatch, tinsert, tostring, tremove, type
     = format, strfind, strjoin, strlower, strmatch, tinsert, tostring, tremove, type
 
@@ -75,7 +77,7 @@ end
 
 local last, result
 
-local function FilterIncoming(self, event, message, sender, _, _, _, flag, _, _, _, _, line, guid)
+local function exspaminate(self, event, message, sender, _, _, _, flag, _, _, _, _, line, guid)
 	if line == last then
 		return result
 	end
@@ -134,13 +136,10 @@ local function FilterIncoming(self, event, message, sender, _, _, _, flag, _, _,
 		end
 	end
 
-	if score > db.threshold then
+	if score > 3 then
 		-- debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
 		-- debug("   ", message)
-		tinsert(db.history, format("[%d] %s: %s", score, sender, message))
-		while #db.history > 100 do
-			tremove(db.history, 1)
-		end
+		tinsert(NoGuildMessages, 1, format("[%d] %s: %s", score, sender, message))
 		result = true
 		return true
 	end
@@ -153,18 +152,19 @@ end
 local addon = CreateFrame("Frame")
 addon:RegisterEvent("PLAYER_LOGIN")
 addon:SetScript("OnEvent", function()
-	NoGuildDB = NoGuildDB or {}
-	db = NoGuildDB
+	-- Initialize log
+	NoGuildMessages = NoGuildMessages or {}
+	db = NoGuildMessages
 
-	for k, v in pairs({
-		history = {},
-		threshold = 3,
-	}) do
-		if db[k] == nil then
-			db[k] = v
-		end
+	-- Truncate log
+	for i = 50, #db do
+		db[i] = nil
 	end
 
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", FilterIncoming)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", FilterIncoming)
+	-- Spammers love that "personal touch"
+	tinsert(L1, (UnitName("player")))
+
+	-- Los!
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
 end)
