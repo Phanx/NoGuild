@@ -56,8 +56,8 @@ NoGuildMessages = {}
 local format, strfind, strjoin, strlower, strmatch, tinsert, tostring, tremove, type
     = format, strfind, strjoin, strlower, strmatch, tinsert, tostring, tremove, type
 
-local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, GetAutoDeclineGuildInvites, IsInGuild, UnitInParty, UnitInRaid, UnitIsInMyGuild
-    = BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, GetAutoDeclineGuildInvites, IsInGuild, UnitInParty, UnitInRaid, UnitIsInMyGuild
+local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid, UnitIsInMyGuild
+    = BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid, UnitIsInMyGuild
 
 local function debug(str, ...)
 	if (...) then
@@ -176,13 +176,11 @@ addon:SetScript("OnEvent", function(self, event)
 	end
 	if toenable then
 		-- Los!
-		print("Los!")
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
 		enabled = true
 	else
 		-- Halt!
-		print("Halt!")
 		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
 		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
 		enabled = false
