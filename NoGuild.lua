@@ -20,14 +20,19 @@ local L1 = {
 	"teamspeak",
 	"ventrilo",
 	"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
-	"tues", "thurs",
+	"tues", "thurs?",
+	-- German
+	"%d ?uhr",
+	"gilde[n%s]", "raid%-?tage",
+	"montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
 }
 
 --	And probably at least one of these words.
 local L2 = {
+	"[{}]",
 	"[^i]le?ve?l? ?%d",
-	"active", "applicant",
-	"casual", "core",
+	"active", "applicant", "apply",
+	"casual", "consider[ei][dn]g?", "core",
 	"exceptional", "e?xpe?r?i?e?n?c?e?",
 	"farm", "fill", "focus", "fun",
 	"goal",
@@ -44,10 +49,16 @@ local L2 = {
 	"unlock",
 	"ventr?i?l?o?",
 	"want", "we are", "we plan t?on?", "weekend", "weekly", "would you like",
+	-- German
+	"atmosphäre", "farmen", "interesse", "leveln", "pflichten", "spaß", "verstärkung",
 }
 
 --	Guild spam usually does not contain these words.
-local OK = { "tank", "heal", "dps", "lfm", "lfg", "scenario" }
+local OK = {
+	"^lf", "lfm", "lfg", "tank", "heal", "dps", "scenario", "ffa", "no reserve",
+	"|ha?c?h?[iq][tu]?e[vms]", -- achievement/item/quest OK
+	"wt[bs]",
+}
 
 ------------------------------------------------------------------------
 
@@ -140,7 +151,9 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 		return true
 	end
 
-	--debug("Allowed message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
+	--if event == "CHAT_MSG_WHISPER" and score > 0 then
+	--	debug("Allowed message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
+	--end
 	result = nil
 end
 
