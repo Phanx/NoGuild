@@ -1,5 +1,5 @@
 ## Interface: 50400
-## Version: 5.4.1.wowi:revision
+## Version: 5.4.2.wowi:revision
 
 ## Title: NoGuild
 ## Notes: Block guild solicitations in whispers and public chat channels.
@@ -11,6 +11,7 @@
 ## X-Email: addons@phanx.net
 ## X-License: Public Domain
 ## X-CompatibleLocales: deDE, enUS, esES, esMX, frFR, itIT, ptBR, koKR, ruRU, zhCN, zhTW
+## X-Localizations: deDE, enUS
 ## X-Website: http://www.wowinterface.com/downloads/info22644-NoGuild.html
 ## X-Curse-Project-Name: noguild
 ## X-WoWI-ID: 22644

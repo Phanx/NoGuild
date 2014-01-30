@@ -12,27 +12,32 @@
 local L1 = {
 	"<", ">", "%%", "%*", "%d/%d", "%d%-%d", "%d:%d%d", "%d ?[ap]m",
 	"bank tab",
-	"fast track", "free guild repair", "free repair",
+	"free guild repair", "free repair",
 	"guild", "giuld", "gulid",
-	"mount up", "mr. popularity", "mumble",
-	"perk",
+	"le?ve?l ?25",
+	"main raid", "member", "memeber",
+	"perk", "progressio?ng?", "pv[ep] guild",
 	"recruit", "reqruit",
-	"teamspeak",
-	"ventrilo",
+	"mumble", "teamspeak", "ventrilo",
+	"http", "www", ".com", ".net", ".org",
 	"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
 	"tues", "thurs?",
 	-- German
 	"%d ?uhr",
-	"gilde[n%s]", "raid%-?tage",
+	"bankfächern", "bewerbung",
+	"gilde[n%s]", "gildenboni", "gildenname", "gildensatzung", "gildenstamm",
+	"levelboni", "levelgilde",
+	"pv[ep]%-?gilde",
+	"raid%-?tage", "raidgilde", "raidorientert", "raidzeit", "rekrutier",
+	"stammplatz", "stufe ?25", "%f[%a]such[et] .*gilde%f[%A]",
 	"montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
 }
 
 --	And probably at least one of these words.
 local L2 = {
-	"[{}]",
 	"[^i]le?ve?l? ?%d",
 	"active", "applicant", "apply",
-	"casual", "consider[ei][dn]g?", "core",
+	"casual", "consider[ei][dn]g?", "content", "core",
 	"exceptional", "e?xpe?r?i?e?n?c?e?",
 	"farm", "fill", "focus", "fun",
 	"goal",
@@ -42,22 +47,33 @@ local L2 = {
 	"laid back", "looking",
 	"member",
 	"newly formed", "nice",
-	"pacific", "progression", "pve", "pvp",
-	"raid", "rbg", "repu?t?a?t?i?o?n?", "roster",
+	"pacific", "player", "progression", "pve", "pvp",
+	"raid", "rbg", "realm", "repu?t?a?t?i?o?n?", "roster",
 	"server time", "skilled", "social",
 	"tabard", "times",
 	"unlock",
 	"ventr?i?l?o?",
 	"want", "we are", "we plan t?on?", "weekend", "weekly", "would you like",
 	-- German
-	"atmosphäre", "farmen", "interesse", "leveln", "pflichten", "spaß", "verstärkung",
+	"18 jahren",
+	"aktive", "anfänger", "atmosphäre", "aufz?u?bau", "bock",
+	"entsprechend", "erfahren", "farmen", "gründe", "hoffe", "interesse", "klasse",
+	"leveln", "lust", "möchte", "motivierte", "pflichten",
+	"sozial", "spaß", "spieler", "stamm",
+	"verplichtung", "verstärkung", "wilkommen",
 }
 
 --	Guild spam usually does not contain these words.
 local OK = {
-	"^lf", "lfm", "lfg", "tank", "heal", "dps", "scenario", "ffa", "no reserve",
-	"|ha?c?h?[iq][tu]?e[vms]", -- achievement/item/quest OK
+	"|hachivement", "|hinstancelock", "|hitem", "|hquest", "|htrade",
+	"arena", "[235]v[235]", " [235]s",
+	"challenge mode", "cm gold", "flex", "^lf ", "lfm", "lfg", "scenario", -- "tank", "heal", "dps",
+	"ffa", "no reserve",
+	-- "galak", "%f[%a]sha%f[%A]", "%f[%a]soo%f[%A]",
 	"wt[bs]",
+	-- German
+	"heute", "morgen",
+	"gildengruppe", " id ", "kaufe", "rbg push", "szenario", "vk ",
 }
 
 ------------------------------------------------------------------------
@@ -85,6 +101,28 @@ end
 ------------------------------------------------------------------------
 
 local seen, last, result = {}
+
+local function check(message)
+	local score = 0
+	local messagelower = gsub(strlower(message), "{.-}", "")
+	for i = 1, #L1 do
+		if strfind(messagelower, L1[i]) then
+			score = score + 3
+		end
+	end
+	for i = 1, #L2 do
+		if strfind(messagelower, L2[i]) then
+			score = score + 1
+		end
+	end
+	for i = 1, #OK do
+		if strfind(messagelower, OK[i]) then
+			score = score - 4
+		end
+	end
+	return score
+end
+GuildSpamScore = check
 
 local function exspaminate(self, event, message, sender, _, _, _, flag, _, channelID, _, _, line, guid)
 	if line == last then
@@ -124,10 +162,10 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 	end
 
 	local score = 0
-	local messagelower = strlower(message)
+	local messagelower = gsub(strlower(message), "{.-}", "")
 	for i = 1, #L1 do
 		if strfind(messagelower, L1[i]) then
-			score = score + 2
+			score = score + 3
 		end
 	end
 	for i = 1, #L2 do
@@ -166,7 +204,16 @@ addon:RegisterEvent("PLAYER_LOGIN")
 addon:SetScript("OnEvent", function(self, event)
 	if event == "PLAYER_LOGIN" then
 		-- Spammers love that "personal touch"
-		tinsert(L1, (UnitName("player")))
+		local name = UnitName("player")
+		tinsert(L1, strlower(name))
+
+		-- Fast Track, Mount Up, Mr. Popularity
+		for _, spell in ipairs({ 78631, 78633, 78634 }) do
+			local name = GetSpellInfo(spell)
+			if name then
+				tinsert(L1, strlower(name))
+			end
+		end
 
 		self:UnregisterEvent("PLAYER_LOGIN")
 		self:RegisterEvent("DISABLE_DECLINE_GUILD_INVITE")
@@ -175,6 +222,16 @@ addon:SetScript("OnEvent", function(self, event)
 		self:RegisterEvent("PLAYER_LOGOUT")
 
 	elseif event == "PLAYER_LOGOUT" then
+		-- Remove duplicate log entries
+		local seen = {}
+		for i = #NoGuildMessages, 1, -1 do
+			local message = NoGuildMessages[i]
+			if seen[message] then
+				tremove(NoGuildMessages, i)
+			else
+				seen[message] = true
+			end
+		end
 		-- Truncate log
 		while #NoGuildMessages > 100 do
 			tremove(NoGuildMessages, #NoGuildMessages)
