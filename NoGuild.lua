@@ -10,7 +10,10 @@
 
 --	Almost all guild spam has at least one of these words.
 local L1 = {
+	-- All languages
 	"<", ">", "%%", "%*", "%d/%d", "%d%-%d", "%d:%d%d", "%d ?[ap]m",
+	"%f[%a]lf .*gu?ilde?%f[%A]", -- en/de
+	-- English
 	"bank tab",
 	"free guild repair", "free repair",
 	"guild", "giuld", "gulid",
@@ -25,11 +28,13 @@ local L1 = {
 	-- German
 	"%d ?uhr",
 	"bankfächern", "bewerbung",
-	"gilde[n%s]", "gildenboni", "gildenname", "gildensatzung", "gildenstamm",
-	"levelboni", "levelgilde",
+	"ep bonus",
+	"gesucht werden", "gilde[n%s]", "gildenboni", "gildenname", "gildensatzung", "gildenstamm", "gilde .+ such[te]",
+	"levelboni", "levelgilde", "lust auf.* gilde",
+	"massen ?wie?der ?belebung",
 	"pv[ep]%-?gilde",
 	"raid%-?tage", "raidgilde", "raidorientert", "raidzeit", "rekrutier",
-	"stammplatz", "stufe ?25", "%f[%a]such[et] .*gilde%f[%A]",
+	"schnelleres reiten", "socius", "stammplatz", "stufe ?25", "%f[%a]such[et] .*gilde%f[%A]",
 	"montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
 }
 
