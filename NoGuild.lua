@@ -8,6 +8,12 @@
 	http://www.curse.com/addons/wow/noguild/
 ----------------------------------------------------------------------]]
 
+local L0 = {
+	"%f[%a]g[uil][iul][uli]d%f[%A]", -- en
+	"%f[%a]gilden?s?%f[%A]", -- de
+	"%f[%a]hermandad%f[%A]", -- es
+}
+
 --	Almost all guild spam has at least one of these words.
 local L1 = {
 	-- All languages
@@ -30,11 +36,11 @@ local L1 = {
 	"bankfächern", "bewerbung",
 	"ep bonus",
 	"gesucht werden", "gilde[n%s]", "gildenboni", "gildenname", "gildensatzung", "gildenstamm", "gilde .+ such[te]",
-	"levelboni", "levelgilde", "lust auf.* gilde",
+	"levelbon[iu]s?", "levelgilde", "lust auf.* gilde",
 	"massen ?wie?der ?belebung",
 	"pv[ep]%-?gilde",
 	"raid%-?tage", "raidgilde", "raidorientert", "raidzeit", "rekrutier",
-	"schnelleres reiten", "socius", "stammplatz", "stufe ?25", "%f[%a]such[et] .*gilde%f[%A]",
+	"schnelleres reiten", "socius", "stammplatz", "stufe ?25", "%f[%a]such[est] .*gilde%f[%A]",
 	"montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
 }
 
@@ -110,6 +116,11 @@ local seen, last, result = {}
 local function check(message)
 	local score = 0
 	local messagelower = gsub(strlower(message), "{.-}", "")
+	for i = 1, #L0 do
+		if strfind(messagelower, L0[i]) then
+			score = score + 10
+		end
+	end
 	for i = 1, #L1 do
 		if strfind(messagelower, L1[i]) then
 			score = score + 3
