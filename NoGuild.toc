@@ -1,9 +1,9 @@
 ## Interface: 50400
-## Version: 5.4.2.wowi:revision
+## Version: 5.4.7.wowi:revision
 
 ## Title: NoGuild
 ## Notes: Block guild solicitations in whispers and public chat channels.
-## Notes-deDE: Gildewerbungen in Flüstern und öffentlichen Channels blockieren.
+## Notes-deDE: Gildenwerbungen in Flüstern und öffentlichen Chat-Channels blockieren.
 ## Notes-esES: Bloquear los anuncios de hermandades en susurros y los canales públicos.
 ## Notes-esMX: Bloquear los anuncios de hermandades en susurros y los canales públicos.
 
@@ -17,5 +17,6 @@
 ## X-WoWI-ID: 22644
 
 ## SavedVariables: NoGuildMessages
+## SavedVariablesPerCharacter: NoGuildStatus
 
 NoGuild.lua

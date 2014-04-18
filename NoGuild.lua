@@ -8,12 +8,6 @@
 	http://www.curse.com/addons/wow/noguild/
 ----------------------------------------------------------------------]]
 
-local L0 = {
-	"%f[%a]g[uil][iul][uli]d%f[%A]", -- en
-	"%f[%a]gilden?s?%f[%A]", -- de
-	"%f[%a]hermandad%f[%A]", -- es
-}
-
 --	Almost all guild spam has at least one of these words.
 local L1 = {
 	-- All languages
@@ -81,18 +75,18 @@ local OK = {
 	"challenge mode", "cm gold", "flex", "^lf ", "lfm", "lfg", "scenario", -- "tank", "heal", "dps",
 	"ffa", "no reserve",
 	-- "galak", "%f[%a]sha%f[%A]", "%f[%a]soo%f[%A]",
-	"wt[bs]",
+	"%f[%a]wt[bs]%f[%A]",
 	-- German
-	"heute", "morgen",
-	"gildengruppe", " id ", "kaufe", "rbg push", "szenario", "vk ",
+	"abend", "heute", "morgen",
+	"gildengruppe", "herausforderung", "%f[%a]id%f[%A]", "kaufe", "rbg push", "szenario", "vk%f[%A]",
 }
 
 ------------------------------------------------------------------------
 
 NoGuildMessages = {}
 
-local format, strfind, strjoin, strlower, strmatch, tinsert, tostring, tremove, type
-    = format, strfind, strjoin, strlower, strmatch, tinsert, tostring, tremove, type
+local format, strfind, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
+    = format, strfind, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
 
 local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid, UnitIsInMyGuild
     = BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid, UnitIsInMyGuild
@@ -113,17 +107,17 @@ end
 
 local seen, last, result = {}
 
-local function check(message)
+local function GetGuildSpamScore(message)
 	local score = 0
-	local messagelower = gsub(strlower(message), "{.-}", "")
+	local messagelower = gsub(strlower(strtrim(message)), "{.-}", "")--[[
 	for i = 1, #L0 do
 		if strfind(messagelower, L0[i]) then
 			score = score + 10
 		end
-	end
+	end]]
 	for i = 1, #L1 do
 		if strfind(messagelower, L1[i]) then
-			score = score + 3
+			score = score + 4
 		end
 	end
 	for i = 1, #L2 do
@@ -138,7 +132,7 @@ local function check(message)
 	end
 	return score
 end
-GuildSpamScore = check
+_G.GetGuildSpamScore = GetGuildSpamScore
 
 local function exspaminate(self, event, message, sender, _, _, _, flag, _, channelID, _, _, line, guid)
 	if line == last then
@@ -177,23 +171,7 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 		end
 	end
 
-	local score = 0
-	local messagelower = gsub(strlower(message), "{.-}", "")
-	for i = 1, #L1 do
-		if strfind(messagelower, L1[i]) then
-			score = score + 3
-		end
-	end
-	for i = 1, #L2 do
-		if strfind(messagelower, L2[i]) then
-			score = score + 1
-		end
-	end
-	for i = 1, #OK do
-		if strfind(messagelower, OK[i]) then
-			score = score - 4
-		end
-	end
+	local score = GetGuildSpamScore(message)
 
 	if score > 3 then
 		--debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
@@ -213,8 +191,6 @@ end
 
 ------------------------------------------------------------------------
 
-local enabled
-
 local addon = CreateFrame("Frame")
 addon:RegisterEvent("PLAYER_LOGIN")
 addon:SetScript("OnEvent", function(self, event)
@@ -229,6 +205,11 @@ addon:SetScript("OnEvent", function(self, event)
 			if name then
 				tinsert(L1, strlower(name))
 			end
+		end
+
+		if NoGuildStatus == nil then
+			SetAutoDeclineGuildInvites(1)
+			NoGuildStatus = true
 		end
 
 		self:UnregisterEvent("PLAYER_LOGIN")
@@ -256,19 +237,18 @@ addon:SetScript("OnEvent", function(self, event)
 		return
 	end
 
-	local toenable = IsInGuild() or GetAutoDeclineGuildInvites() == 1
-	if toenable == enabled then
+	local enable = not not (IsInGuild() or GetAutoDeclineGuildInvites() == 1)
+	if enable == NoGuildStatus and event ~= "PLAYER_LOGIN" then
 		return
 	end
-	if toenable then
+	if enable then
 		-- Los!
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
-		enabled = true
 	else
 		-- Halt!
 		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
 		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
-		enabled = false
 	end
+	NoGuildStatus = enable
 end)
