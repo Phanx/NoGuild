@@ -1,9 +1,8 @@
 --[[--------------------------------------------------------------------
 	NoGuild
 	Blocks guild solicitations in whispers and public chat channels.
-	Written by Phanx <addons@phanx.net>
-	This is free and unencumbered software released into the public domain.
-	See the accompanying README and UNLICENSE files for more information.
+	Copyright (c) 2013-2014 Phanx. All rights reserved.
+	See the accompanying README and LICENSE files for more information.
 	http://www.wowinterface.com/downloads/info22644-NoGuild.html
 	http://www.curse.com/addons/wow/noguild/
 ----------------------------------------------------------------------]]

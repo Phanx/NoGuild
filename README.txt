@@ -1,35 +1,42 @@
 NoGuild
 ============
 
-* Written by Phanx <addons@phanx.net>
-* http://www.wowinterface.com/downloads/info22644-NoGuild.html
-* http://www.curse.com/addons/wow/noguild
+Blocks guild advertisements in whispers and public chat channels.
 
 
-Description
-----------------
+Download
+-----------
 
-Blocks guild solicitations in whispers and public chat channels.
+* [WoWInterface](http://www.wowinterface.com/downloads/info22644-NoGuild.html)
+* [Curse](http://www.curse.com/addons/wow/noguild)
 
 
 Localization
 -----------------
 
-Compatible with all locales. Does not require translations.
+Compatible with all localized game clients.
+
+Currently detects spam in English and German only. Contributions of
+keyword lists for other languages are welcome.
 
 
 Feedback
--------------
+-----------
 
-Bugs, errors, or other problems:
-	Please use the ticket system on either download page.
+Post a ticket on either download site, or a comment on WoWInterface.
 
-Feature requests or other suggestions:
-	Please use the ticket system on either download page.
+If you are reporting a bug, please include directions I can follow to
+reproduce the bug, whether it still happens when all other addons are
+disabled, and the exact text of the related error message (if any) from 
+[BugSack](http://www.wowinterface.com/downloads/info5995-BugSack.html).
 
-General questions or comments:
-	Post a comment on either download page.
+If you need to contact me privately, you can send me a private message
+on either download site, or email me at <addons@phanx.net>.
 
-If you need to contact me privately for a reason **other** than those
-listed above, you can send a PM to Phanx on either download site, or
-email me at <addons@phanx.net>.
+
+License
+----------
+
+Copyright (c) 2014 Phanx. All rights reserved.  
+See the accompanying LICENSE file for information about the conditions
+under which redistribution and modification may be allowed.
