@@ -28,7 +28,7 @@ local L1 = {
 	"%d ?uhr",
 	"bankfächern", "bewerbung",
 	"ep bonus",
-	"gesucht werden", "gilde[n%s]", "gildenboni", "gildenname", "gildensatzung", "gildenstamm", "gilde .+ such[te]",
+	"gesucht werden", "gilde[n%s]", "gildenboni", "gildenname", "gildensatzung", "gildenstamm", "gilde .+ such[te]", "gründung",
 	"levelbon[iu]s?", "levelgilde", "lust auf.* gilde",
 	"massen ?wie?der ?belebung",
 	"pv[ep]%-?gilde",
@@ -63,7 +63,7 @@ local L2 = {
 	"aktive", "anfänger", "atmosphäre", "aufz?u?bau", "bock",
 	"entsprechend", "erfahren", "farmen", "gründe", "hoffe", "interesse", "klasse",
 	"leveln", "lust", "möchte", "motivierte", "pflichten",
-	"sozial", "spaß", "spieler", "stamm",
+	"sozial", "spaß", "spiel", "stamm",
 	"verplichtung", "verstärkung", "wilkommen",
 }
 
