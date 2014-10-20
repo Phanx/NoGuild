@@ -28,9 +28,9 @@ local L1 = {
 	"%d ?uhr",
 	"bankfächern", "bewerbung",
 	"ep bonus",
-	"gesucht werden", "gilde[n%s]", "gildenboni", "gildenname", "gildensatzung", "gildenstamm", "gilde .+ such[te]", "gründung",
+	"gegründet", "gesucht werden", "gilde[n%s]", "gildenboni", "gildenname", "gildensatzung", "gildenstamm", "gilde .+ such[te]", "gründung",
 	"levelbon[iu]s?", "levelgilde", "lust auf.* gilde",
-	"massen ?wie?der ?belebung",
+	"massen ?wie?der ?belebung", "mitstreiter",
 	"pv[ep]%-?gilde",
 	"raid%-?tage", "raidgilde", "raidorientert", "raidzeit", "rekrutier",
 	"schnelleres reiten", "socius", "stammplatz", "stufe ?25", "%f[%a]such[est] .*gilde%f[%A]",
@@ -142,20 +142,20 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 	-- debug("[flag]", tostring(flag), "[line]", tostring(line), "[CanComplainChat]", tostring(CanComplainChat(line)))
 
 	if flag == "GM" or flag == "DEV" then
-		return --debug("ALLOWED [flag]", flag)
+		return debug("ALLOWED [flag]", flag)
 	end
 
 	if event == "CHAT_MSG_CHANNEL" and (channelID == 0 or type(channelID) ~= "number") then
 		-- Ignore custom channels
-		return --debug("ALLOWED custom channel", channelID)
+		return debug("ALLOWED custom channel", channelID)
 	end
 
 	if not CanComplainChat(line) or UnitIsInMyGuild(sender) or UnitInRaid(sender) or UnitInParty(sender) then
-		return --[[ debug("ALLOWED",
+		return debug("ALLOWED",
 			"[CanComplainChat]", CanComplainChat(line),
 			"[UnitIsInMyGuild]", UnitIsInMyGuild(sender),
 			"[UnitInRaid]",      UnitInRaid(sender),
-			"[UnitInParty]",     UnitInParty(sender)) ]]
+			"[UnitInParty]",     UnitInParty(sender))
 	end
 
 	if event == "CHAT_MSG_WHISPER" then
@@ -164,7 +164,7 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 			for j = 1, BNGetNumFriendToons(i) do
 				local _, name, game = BNGetFriendToonInfo(i, j)
 				if name == sender and game == "WoW" then
-					return --debug("ALLOWED [BNGetFriendToonInfo]", i, j, name, game)
+					return debug("ALLOWED [BNGetFriendToonInfo]", i, j, name, game)
 				end
 			end
 		end
@@ -173,7 +173,7 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 	local score = GetGuildSpamScore(message)
 
 	if score > 3 then
-		--debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
+		debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
 		--debug("   ", message)
 		if not seen[message] then
 			tinsert(NoGuildMessages, 1, format("[%d] %s: %s", score, sender, message))
