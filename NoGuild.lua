@@ -207,7 +207,7 @@ addon:SetScript("OnEvent", function(self, event)
 		end
 
 		if NoGuildStatus == nil then
-			SetAutoDeclineGuildInvites(1)
+			SetAutoDeclineGuildInvites(true)
 			NoGuildStatus = true
 		end
 
@@ -236,7 +236,7 @@ addon:SetScript("OnEvent", function(self, event)
 		return
 	end
 
-	local enable = not not (IsInGuild() or GetAutoDeclineGuildInvites() == 1)
+	local enable = GetAutoDeclineGuildInvites() and not IsInGuild()
 	if enable == NoGuildStatus and event ~= "PLAYER_LOGIN" then
 		return
 	end
