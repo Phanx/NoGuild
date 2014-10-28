@@ -139,19 +139,19 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 	end
 	last, result = line, nil
 
-	-- debug("[flag]", tostring(flag), "[line]", tostring(line), "[CanComplainChat]", tostring(CanComplainChat(line)))
+	--debug("[flag]", tostring(flag), "[line]", tostring(line), "[CanComplainChat]", tostring(CanComplainChat(line)))
 
 	if flag == "GM" or flag == "DEV" then
-		return debug("ALLOWED [flag]", flag)
+		return --debug("ALLOWED [flag]", flag)
 	end
 
 	if event == "CHAT_MSG_CHANNEL" and (channelID == 0 or type(channelID) ~= "number") then
 		-- Ignore custom channels
-		return debug("ALLOWED custom channel", channelID)
+		return --debug("ALLOWED custom channel", channelID)
 	end
 
 	if not CanComplainChat(line) or UnitIsInMyGuild(sender) or UnitInRaid(sender) or UnitInParty(sender) then
-		return debug("ALLOWED",
+		return --debug("ALLOWED",
 			"[CanComplainChat]", CanComplainChat(line),
 			"[UnitIsInMyGuild]", UnitIsInMyGuild(sender),
 			"[UnitInRaid]",      UnitInRaid(sender),
@@ -164,7 +164,7 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 			for j = 1, BNGetNumFriendToons(i) do
 				local _, name, game = BNGetFriendToonInfo(i, j)
 				if name == sender and game == "WoW" then
-					return debug("ALLOWED [BNGetFriendToonInfo]", i, j, name, game)
+					return --debug("ALLOWED [BNGetFriendToonInfo]", i, j, name, game)
 				end
 			end
 		end
@@ -173,7 +173,7 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 	local score = GetGuildSpamScore(message)
 
 	if score > 3 then
-		debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
+		--debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
 		--debug("   ", message)
 		if not seen[message] then
 			tinsert(NoGuildMessages, 1, format("[%d] %s: %s", score, sender, message))
@@ -199,7 +199,7 @@ addon:SetScript("OnEvent", function(self, event)
 		tinsert(L1, strlower(name))
 
 		-- Fast Track, Mount Up, Mr. Popularity
-		for _, spell in ipairs({ 78631, 78633, 78634 }) do
+		for _, spell in pairs({ 78631, 78633, 78634 }) do
 			local name = GetSpellInfo(spell)
 			if name then
 				tinsert(L1, strlower(name))
