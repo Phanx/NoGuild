@@ -93,12 +93,12 @@ local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat
 local function debug(str, ...)
 	if (...) then
 		if type(str) == "string" and strmatch(str, "%%[dfqsx%d%.]") then
-			DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. format(str, ...))
+			(DEBUG_CHAT_FRAME or ChatFrame3):AddMessage("|cffffcc33[NoGuild]|r " .. format(str, ...))
 		else
-			DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. strjoin(" ", tostringall(str, ...)))
+			(DEBUG_CHAT_FRAME or ChatFrame3):AddMessage("|cffffcc33[NoGuild]|r " .. strjoin(" ", tostringall(str, ...)))
 		end
 	elseif str then
-		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc33[NoGuild]|r " .. tostring(str))
+		(DEBUG_CHAT_FRAME or ChatFrame3):AddMessage("|cffffcc33[NoGuild]|r " .. tostring(str))
 	end
 end
 
@@ -151,11 +151,11 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 	end
 
 	if not CanComplainChat(line) or UnitIsInMyGuild(sender) or UnitInRaid(sender) or UnitInParty(sender) then
-		return --debug("ALLOWED",
+		return --[[debug("ALLOWED",
 			"[CanComplainChat]", CanComplainChat(line),
 			"[UnitIsInMyGuild]", UnitIsInMyGuild(sender),
 			"[UnitInRaid]",      UnitInRaid(sender),
-			"[UnitInParty]",     UnitInParty(sender))
+			"[UnitInParty]",     UnitInParty(sender))]]
 	end
 
 	if event == "CHAT_MSG_WHISPER" then
@@ -198,8 +198,8 @@ addon:SetScript("OnEvent", function(self, event)
 		local name = UnitName("player")
 		tinsert(L1, strlower(name))
 
-		-- Fast Track, Mount Up, Mr. Popularity
-		for _, spell in pairs({ 78631, 78633, 78634 }) do
+		-- Guild Mail, Hasty Hearth, Mass Resurrection, Mobile Banking, Mount Up, The Quick and the Dead
+		for _, spell in pairs({ 83951, 83944, 83968, 83958, 78633, 83950 }) do
 			local name = GetSpellInfo(spell)
 			if name then
 				tinsert(L1, strlower(name))
