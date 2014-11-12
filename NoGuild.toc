@@ -1,5 +1,5 @@
 ## Interface: 60000
-## Version: 6.0.2.wowi:revision
+## Version: 6.0.2.21
 
 ## Title: NoGuild
 ## Notes: Blocks guild advertisements in whispers and public chat channels.
@@ -10,12 +10,7 @@
 ## Author: Phanx
 ## X-Email: addons@phanx.net
 ## X-Copyright: Copyright (c) 2013-2014 Phanx. All rights reserved.
-## X-License: See the accompanying LICENSE file for details.
-## X-CompatibleLocales: deDE, enUS, esES, esMX, frFR, itIT, ptBR, koKR, ruRU, zhCN, zhTW
-## X-Localizations: deDE, enUS
-## X-Website: http://www.wowinterface.com/downloads/info22644-NoGuild.html
-## X-Curse-Project-Name: noguild
-## X-WoWI-ID: 22644
+## X-Website: https://github.com/Phanx/NoGuild
 
 ## SavedVariables: NoGuildMessages
 ## SavedVariablesPerCharacter: NoGuildStatus
