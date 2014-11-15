@@ -1,5 +1,5 @@
 ## Interface: 60000
-## Version: 6.0.2.21
+## Version: 6.0.3.22
 
 ## Title: NoGuild
 ## Notes: Blocks guild advertisements in whispers and public chat channels.
