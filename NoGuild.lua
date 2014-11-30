@@ -35,6 +35,8 @@ local L1 = {
 	"raid%-?tage", "raidgilde", "raidorientert", "raidzeit", "rekrutier",
 	"schnelleres reiten", "socius", "stammplatz", "stufe ?25", "%f[%a]such[est] .*gilde%f[%A]",
 	"montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
+	-- Swedish
+	"söker lirare", "casualraida",
 }
 
 --	And probably at least one of these words.
