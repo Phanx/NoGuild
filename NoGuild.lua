@@ -19,7 +19,7 @@ local L1 = {
 	"le?ve?l ?25",
 	"main raid", "member", "memeber",
 	"perk", "progressio?ng?", "pv[ep] guild",
-	"recruit", "reqruit",
+	"raidi?n?g? ?team", "recruit", "reqruit",
 	"mumble", "teamspeak", "ventrilo",
 	"http", "www", ".com", ".net", ".org",
 	"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
@@ -35,6 +35,10 @@ local L1 = {
 	"raid%-?tage", "raidgilde", "raidorientert", "raidzeit", "rekrutier",
 	"schnelleres reiten", "socius", "stammplatz", "stufe ?25", "%f[%a]such[est] .*gilde%f[%A]",
 	"montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
+	-- Danish
+	"dansk", "søger",
+	-- Polish
+	"gildia", "polski", "szuka",
 	-- Swedish
 	"söker lirare", "casualraida",
 }
