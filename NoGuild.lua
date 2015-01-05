@@ -15,13 +15,13 @@ local L1 = {
 	-- English
 	"bank tab",
 	"free guild repair", "free repair",
-	"guild", "giuld", "gulid",
+	"guild", "guilld", "giuld", "gulid", -- people are really bad at typing
 	"le?ve?l ?25",
 	"main raid", "member", "memeber",
 	"perk", "progressio?ng?", "pv[ep] guild",
-	"raidi?n?g? ?team", "recruit", "reqruit",
+	"raidi?n?g? ?team", "re[cq]ruit",
 	"mumble", "teamspeak", "ventrilo",
-	"http", "www", ".com", ".net", ".org",
+	"http", "www", "%.com", "%.net", "%.org",
 	"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
 	"tues", "thurs?",
 	-- German
@@ -75,9 +75,9 @@ local L2 = {
 
 --	Guild spam usually does not contain these words.
 local OK = {
-	"|hachivement", "|hinstancelock", "|hitem", "|hquest", "|htrade",
+	"|hachievement", "|hinstancelock", "|hitem", "|hquest", "|htrade",
 	"arena", "[235]v[235]", " [235]s",
-	"challenge mode", "cm gold", "flex", "^lf ", "lfm", "lfg", "scenario", -- "tank", "heal", "dps",
+	"challenge mode", "cm gold", "flex", "^lf [^g][^u]", "lfm", "lfg", "scenario", -- "tank", "heal", "dps",
 	"ffa", "no reserve",
 	-- "galak", "%f[%a]sha%f[%A]", "%f[%a]soo%f[%A]",
 	"%f[%a]wt[bs]%f[%A]",
@@ -90,8 +90,8 @@ local OK = {
 
 NoGuildMessages = {}
 
-local format, strfind, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
-    = format, strfind, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
+local format, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
+    = format, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
 
 local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid, UnitIsInMyGuild
     = BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid, UnitIsInMyGuild
@@ -114,24 +114,19 @@ local seen, last, result = {}
 
 local function GetGuildSpamScore(message)
 	local score = 0
-	local messagelower = gsub(strlower(strtrim(message)), "{.-}", "")--[[
-	for i = 1, #L0 do
-		if strfind(messagelower, L0[i]) then
-			score = score + 10
-		end
-	end]]
+	local messagelower = gsub(strlower(strtrim(message)), "{.-}", "")
 	for i = 1, #L1 do
-		if strfind(messagelower, L1[i]) then
+		if strmatch(messagelower, L1[i]) then
 			score = score + 4
 		end
 	end
 	for i = 1, #L2 do
-		if strfind(messagelower, L2[i]) then
+		if strmatch(messagelower, L2[i]) then
 			score = score + 1
 		end
 	end
 	for i = 1, #OK do
-		if strfind(messagelower, OK[i]) then
+		if strmatch(messagelower, OK[i]) then
 			score = score - 4
 		end
 	end
