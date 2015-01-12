@@ -1,3 +1,8 @@
+### Version 6.0.3.6
+
+* Added a few keywords for Danish, Polish, Swedish
+* Blocking is now tied only to the "Block Guild Invites" option
+
 ### Version 6.0.3.22
 
 * Some fix
