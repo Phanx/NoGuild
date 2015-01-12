@@ -9,10 +9,9 @@
 
 ## Author: Phanx
 ## X-Email: addons@phanx.net
-## X-Copyright: Copyright (c) 2013-2014 Phanx. All rights reserved.
+## X-Copyright: Copyright (c) 2013-2015 Phanx. All rights reserved.
 ## X-Website: https://github.com/Phanx/NoGuild
 
 ## SavedVariables: NoGuildMessages
-## SavedVariablesPerCharacter: NoGuildStatus
 
 NoGuild.lua

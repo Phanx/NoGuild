@@ -70,7 +70,7 @@ local L2 = {
 	"entsprechend", "erfahren", "farmen", "gründe", "hoffe", "interesse", "klasse",
 	"leveln", "lust", "möchte", "motivierte", "pflichten",
 	"sozial", "spaß", "spiel", "stamm",
-	"verplichtung", "verstärkung", "wilkommen",
+	"verpflichtung", "verstärkung", "wilkommen",
 }
 
 --	Guild spam usually does not contain these words.
@@ -93,16 +93,14 @@ NoGuildMessages = {}
 local format, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
     = format, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
 
-local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid, UnitIsInMyGuild
-    = BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid, UnitIsInMyGuild
+local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid
+    = BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid
 
 local function debug(str, ...)
-	if (...) then
-		if type(str) == "string" and strmatch(str, "%%[dfqsx%d%.]") then
-			(DEBUG_CHAT_FRAME or ChatFrame3):AddMessage("|cffffcc33[NoGuild]|r " .. format(str, ...))
-		else
-			(DEBUG_CHAT_FRAME or ChatFrame3):AddMessage("|cffffcc33[NoGuild]|r " .. strjoin(" ", tostringall(str, ...)))
-		end
+	if type(str) == "string" and strmatch(str, "%%[dfqsx%d%.]") then
+		(DEBUG_CHAT_FRAME or ChatFrame3):AddMessage("|cffffcc33[NoGuild]|r " .. format(str, ...))
+	elseif (...) then
+		(DEBUG_CHAT_FRAME or ChatFrame3):AddMessage("|cffffcc33[NoGuild]|r " .. strjoin(" ", tostringall(str, ...)))
 	elseif str then
 		(DEBUG_CHAT_FRAME or ChatFrame3):AddMessage("|cffffcc33[NoGuild]|r " .. tostring(str))
 	end
@@ -132,60 +130,59 @@ local function GetGuildSpamScore(message)
 	end
 	return score
 end
+--@debug@
 _G.GetGuildSpamScore = GetGuildSpamScore
+--@end-debug@
 
-local function exspaminate(self, event, message, sender, _, _, _, flag, _, channelID, _, _, line, guid)
+local function exspaminate(self, event, message, sender, _, _, _, flag, _, channel, _, _, line, guid)
 	if line == last then
 		return result
 	end
 	last, result = line, nil
 
-	--debug("[flag]", tostring(flag), "[line]", tostring(line), "[CanComplainChat]", tostring(CanComplainChat(line)))
-
-	if flag == "GM" or flag == "DEV" then
-		return --debug("ALLOWED [flag]", flag)
-	end
-
-	if event == "CHAT_MSG_CHANNEL" and (channelID == 0 or type(channelID) ~= "number") then
+	if event == "CHAT_MSG_CHANNEL" and (channel == 0 or type(channel) ~= "number") then
 		-- Ignore custom channels
-		return --debug("ALLOWED custom channel", channelID)
+		return -- debug("ALLOWED custom channel:", channel)
 	end
 
-	if not CanComplainChat(line) or UnitIsInMyGuild(sender) or UnitInRaid(sender) or UnitInParty(sender) then
-		return --[[debug("ALLOWED",
-			"[CanComplainChat]", CanComplainChat(line),
-			"[UnitIsInMyGuild]", UnitIsInMyGuild(sender),
-			"[UnitInRaid]",      UnitInRaid(sender),
-			"[UnitInParty]",     UnitInParty(sender))]]
+	if not CanComplainChat(line) then
+		return -- debug("ALLOWED not CanComplainChat")
+	end
+
+	-- TODO: does CanComplainChat obviate this check?
+	local stripper = Ambiguate(sender, "none")
+	if UnitInRaid(stripper) or UnitInParty(stripper) then
+		return -- debug("ALLOWED group member")
 	end
 
 	if event == "CHAT_MSG_WHISPER" then
+		if flag == "GM" or flag == "DEV" then
+			return -- debug("ALLOWED flag:", flag)
+		end
 		local _, numBnetFriends = BNGetNumFriends()
 		for i = 1, numBnetFriends do
 			for j = 1, BNGetNumFriendToons(i) do
 				local _, name, game = BNGetFriendToonInfo(i, j)
 				if name == sender and game == "WoW" then
-					return --debug("ALLOWED [BNGetFriendToonInfo]", i, j, name, game)
+					return -- debug("ALLOWED BNet friend:", i, j, name, game)
 				end
 			end
 		end
 	end
 
 	local score = GetGuildSpamScore(message)
-
 	if score > 3 then
-		--debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
-		--debug("   ", message)
+		-- debug("Blocked message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
+		-- debug("   ", message)
 		if not seen[message] then
 			tinsert(NoGuildMessages, 1, format("[%d] %s: %s", score, sender, message))
 		end
 		result = true
 		return true
 	end
-
-	--if event == "CHAT_MSG_WHISPER" and score > 0 then
-	--	debug("Allowed message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
-	--end
+	-- if event == "CHAT_MSG_WHISPER" and score > 0 then
+		-- debug("Allowed message with score %d from |Hplayer:%s:%d|h%s|h:", score, sender, line, sender)
+	-- end
 	result = nil
 end
 
@@ -200,16 +197,11 @@ addon:SetScript("OnEvent", function(self, event)
 		tinsert(L1, strlower(name))
 
 		-- Guild Mail, Hasty Hearth, Mass Resurrection, Mobile Banking, Mount Up, The Quick and the Dead
-		for _, spell in pairs({ 83951, 83944, 83968, 83958, 78633, 83950 }) do
+		for _, spell in next, { 83951, 83944, 83968, 83958, 78633, 83950 } do
 			local name = GetSpellInfo(spell)
 			if name then
 				tinsert(L1, strlower(name))
 			end
-		end
-
-		if NoGuildStatus == nil then
-			SetAutoDeclineGuildInvites(true)
-			NoGuildStatus = true
 		end
 
 		self:UnregisterEvent("PLAYER_LOGIN")
@@ -237,11 +229,7 @@ addon:SetScript("OnEvent", function(self, event)
 		return
 	end
 
-	local enable = GetAutoDeclineGuildInvites() and not IsInGuild()
-	if enable == NoGuildStatus and event ~= "PLAYER_LOGIN" then
-		return
-	end
-	if enable then
+	if GetAutoDeclineGuildInvites() then
 		-- Los!
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
@@ -250,5 +238,4 @@ addon:SetScript("OnEvent", function(self, event)
 		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_CHANNEL", exspaminate)
 		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_WHISPER", exspaminate)
 	end
-	NoGuildStatus = enable
 end)
