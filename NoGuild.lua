@@ -1,7 +1,7 @@
 --[[--------------------------------------------------------------------
 	NoGuild
 	Blocks guild solicitations in whispers and public chat channels.
-	Copyright (c) 2013-2014 Phanx. All rights reserved.
+	Copyright (c) 2013-2015 Phanx. All rights reserved.
 	http://www.wowinterface.com/downloads/info22644-NoGuild.html
 	http://www.curse.com/addons/wow/noguild/
 	https://github.com/Phanx/NoGuild
