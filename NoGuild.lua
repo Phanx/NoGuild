@@ -1,10 +1,10 @@
 --[[--------------------------------------------------------------------
 	NoGuild
 	Blocks guild solicitations in whispers and public chat channels.
-	Copyright (c) 2013-2015 Phanx. All rights reserved.
-	http://www.wowinterface.com/downloads/info22644-NoGuild.html
-	http://www.curse.com/addons/wow/noguild/
+	Copyright (c) 2013-2016 Phanx. All rights reserved.
 	https://github.com/Phanx/NoGuild
+	http://mods.curse.com/addons/wow/noguild/
+	http://www.wowinterface.com/downloads/info22644-NoGuild.html
 ----------------------------------------------------------------------]]
 
 --	Almost all guild spam has at least one of these words.
@@ -20,6 +20,7 @@ local L1 = {
 	"main raid", "member", "memeber",
 	"perk", "progressio?ng?", "pv[ep] guild",
 	"raidi?n?g? ?team", "re[cq]ruit",
+	"sorry to see you decline",
 	"mumble", "teamspeak", "ventrilo",
 	"http", "www", "%.com", "%.net", "%.org",
 	"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
