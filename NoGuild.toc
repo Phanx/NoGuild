@@ -1,7 +1,7 @@
 ## Interface: 70000
 ## Version: @project-version@
 
-## Title: NoGuild
+## Title: No Guild
 ## Notes: Blocks guild advertisements in whispers and public chat channels.
 ## Notes-deDE: Blockiert Gildenwerbungen in Flüstern und öffentlichen Chat-Channels.
 ## Notes-esES: Bloquea los anuncios de hermandades en susurros y los canales públicos.
