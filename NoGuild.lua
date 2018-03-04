@@ -3,8 +3,8 @@
 	Blocks guild solicitations in whispers and public chat channels.
 	Copyright (c) 2013-2016 Phanx. All rights reserved.
 	https://github.com/Phanx/NoGuild
-	http://mods.curse.com/addons/wow/noguild/
-	http://www.wowinterface.com/downloads/info22644-NoGuild.html
+	https://www.curseforge.com/wow/addons/noguild/
+	https://www.wowinterface.com/downloads/info22644-NoGuild.html
 ----------------------------------------------------------------------]]
 
 --	Almost all guild spam has at least one of these words.
