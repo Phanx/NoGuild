@@ -94,8 +94,8 @@ NoGuildMessages = {}
 local format, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
     = format, strjoin, strlower, strmatch, strtrim, tinsert, tostring, tremove, type
 
-local BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid
-    = BNGetFriendToonInfo, BNGetNumFriends, BNGetNumFriendToons, CanComplainChat, UnitInParty, UnitInRaid
+local BNGetFriendGameAccountInfo, BNGetNumFriends, BNGetNumFriendGameAccounts, CanComplainChat, UnitInParty, UnitInRaid
+    = BNGetFriendGameAccountInfo, BNGetNumFriends, BNGetNumFriendGameAccounts, CanComplainChat, UnitInParty, UnitInRaid
 
 local function debug(str, ...)
 	if type(str) == "string" and strmatch(str, "%%[dfqsx%d%.]") then
@@ -162,8 +162,8 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 		end
 		local _, numBnetFriends = BNGetNumFriends()
 		for i = 1, numBnetFriends do
-			for j = 1, BNGetNumFriendToons(i) do
-				local _, name, game = BNGetFriendToonInfo(i, j)
+			for j = 1, BNGetNumFriendGameAccounts(i) do
+				local _, name, game, server = BNGetFriendGameAccountInfo(i, j)
 				if name == sender and game == "WoW" then
 					return -- debug("ALLOWED BNet friend:", i, j, name, game)
 				end
