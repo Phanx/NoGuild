@@ -141,16 +141,20 @@ local function exspaminate(self, event, message, sender, _, _, _, flag, _, chann
 	end
 	last, result = line, nil
 
+	if flag == "GM" or flag == "DEV" or (GMChatFrame_IsGM and GMChatFrame_IsGM(sender)) then
+		return
+	end
+
 	if event == "CHAT_MSG_CHANNEL" and (channel == 0 or type(channel) ~= "number") then
 		-- Ignore custom channels
 		return -- debug("ALLOWED custom channel:", channel)
 	end
 
-	if not CanComplainChat(line) then
-		return -- debug("ALLOWED not CanComplainChat")
-	end
+--	if not CanComplainChat(line) then
+--		return -- debug("ALLOWED not CanComplainChat")
+--	end
 
-	-- TODO: does CanComplainChat obviate this check?
+	-- TODO: does CanComplainChat obviate this check? -- n/a in 8.0
 	local stripper = Ambiguate(sender, "none")
 	if UnitInRaid(stripper) or UnitInParty(stripper) then
 		return -- debug("ALLOWED group member")
